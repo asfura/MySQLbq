@@ -179,7 +179,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
               for thDone in threadList:
                 thDone.join()
                 logging.info("Done and Joined %i rows", count)
-               threadList = []
+              threadList = []
             
             #bq_load(bq_table, cur_batch)
 
