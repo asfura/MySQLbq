@@ -8,6 +8,7 @@ from MySQLdb.converters import conversions
 import click
 import MySQLdb.cursors
 from google.cloud.exceptions import ServiceUnavailable
+import threading
 
 bqTypeDict = { 'int' : 'INTEGER',
                'varchar' : 'STRING',
@@ -165,7 +166,9 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
         cur_batch.append(row)
 
         if count % batch_size == 0 and count != 0:
-            bq_load(bq_table, cur_batch)
+            th = threading.Thread(target=bq_load, args=(bq_table,cur_batch ))
+            th.start()
+            #bq_load(bq_table, cur_batch)
 
             cur_batch = []
             logging.info("processed %i rows", count)
