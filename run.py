@@ -9,6 +9,7 @@ import click
 import MySQLdb.cursors
 from google.cloud.exceptions import ServiceUnavailable
 import threading
+from Queue import Queue
 
 bqTypeDict = { 'int' : 'INTEGER',
                'varchar' : 'STRING',
@@ -175,6 +176,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
             th.start()
             currth = currth +1
             if currth>=maxth:
+              currth=0
               for thDone in threadList:
                 thDone.join()
                 logging.info("Done %i rows", count)
