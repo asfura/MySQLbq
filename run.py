@@ -155,7 +155,9 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
 
     cur_batch = []
     count = 0
-
+    threadsList=[]
+    maxth = 5
+    currth = 0
     for row in cursor:
         count += 1
 
@@ -167,7 +169,13 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
 
         if count % batch_size == 0 and count != 0:
             th = threading.Thread(target=bq_load, args=(bq_table,cur_batch ))
+            threadList.append(th)
             th.start()
+            currth = currth +1
+            if currth>=5:
+              for thDone in threadList:
+                thDone.join()
+            
             #bq_load(bq_table, cur_batch)
 
             cur_batch = []
