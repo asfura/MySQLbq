@@ -9,7 +9,6 @@ import click
 import MySQLdb.cursors
 from google.cloud.exceptions import ServiceUnavailable
 import threading
-from Queue import Queue
 
 bqTypeDict = { 'int' : 'INTEGER',
                'varchar' : 'STRING',
