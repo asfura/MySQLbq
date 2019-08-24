@@ -91,7 +91,7 @@ def bq_load(table, data, max_retries=5, name='', iteration=0):
             logging.info('Restarting this try %i',iteration)
             iteration = iteration +1
             bq_load(table,data,max_retries,name,iteration)
-        if iteration==2
+        if iteration==2:
             logging.error('Error %s',name)
 
 
