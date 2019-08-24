@@ -173,7 +173,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
             threadList.append(th)
             th.start()
             currth = currth +1
-            if currth>=5:
+            if currth>=maxth:
               for thDone in threadList:
                 thDone.join()
             
