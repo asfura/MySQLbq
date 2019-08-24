@@ -102,7 +102,8 @@ def bq_load(table, data, max_retries=5, name=''):
 @click.option('-k', '--key',  default='google_key.json', help='Location of google service account key (relative to current working dir)')
 @click.option('-v', '--verbose',  default=0, count=True, help='verbose')
 @click.option('-dt','--delete_table', default=0, count=True, help='Delete existing table on BQ')
-def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limit, batch_size, key, verbose, delete_table):
+@click.option('-th','--threads', default=mp.cpu_count(), help='Number of parallel threads')
+def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limit, batch_size, key, verbose, delete_table, threads):
     # set to max verbose level
     verbose = verbose if verbose < 3 else 3
     loglevel = logging.ERROR - (10 * verbose)
@@ -157,8 +158,8 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
 
     cur_batch = []
     count = 0
-    pool = mp.Pool(mp.cpu_count())
-    logging.info('CPUs: %i',mp.cpu_count())
+    pool = mp.Pool(threads)
+    logging.info('CPUs: %i, Threads: ',mp.cpu_count(), threads)
     for row in cursor:
         count += 1
 
