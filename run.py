@@ -9,6 +9,7 @@ import click
 import MySQLdb.cursors
 from google.cloud.exceptions import ServiceUnavailable
 import threading
+import multiprocessing as mp
 
 bqTypeDict = { 'int' : 'INTEGER',
                'varchar' : 'STRING',
@@ -156,9 +157,8 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
 
     cur_batch = []
     count = 0
-    threadList=[]
-    maxth = 2
-    currth = 0
+    pool = mp.Pool(mp.cpu_count())
+    
     for row in cursor:
         count += 1
 
@@ -169,17 +169,8 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
         cur_batch.append(row)
 
         if count % batch_size == 0 and count != 0:
-            th = threading.Thread(target=bq_load, args=(bq_table,cur_batch ))
-            threadList.append(th)
-            logging.info("Starting %i rows", count)
-            th.start()
-            currth = currth +1
-            if currth>=maxth:
-              currth=0
-              for thDone in threadList:
-                thDone.join()
-                logging.info("Done and Joined %i rows", count)
-              threadList = []
+            logging.info('Pooling %i',count)
+            th = pool.Apply(bq_load, args=(bq_table,cur_batch ))
             
             #bq_load(bq_table, cur_batch)
 
