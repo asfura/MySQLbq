@@ -117,7 +117,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
         # Creates the new dataset
         bq_dataset.create()
         logging.info("Added Dataset")
-    except Exception, e:
+    except Exception as e:
         if ("Already Exists: " in str(e)):
             logging.info("Dataset already exists")
         else:
@@ -129,7 +129,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
         bq_table.create()
 
         logging.info("Added Table %s", table)
-    except Exception, e:
+    except Exception as e:
         logging.info(e)
         if ("Already Exists: " in str(e)):
             logging.info("Table %s already exists", table)
