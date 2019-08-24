@@ -158,7 +158,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
     cur_batch = []
     count = 0
     pool = mp.Pool(mp.cpu_count())
-    
+    logging.info('CPUs: %i',mp.cpu_count())
     for row in cursor:
         count += 1
 
