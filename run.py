@@ -87,7 +87,7 @@ def bq_load(table, data, max_retries=5, name='', iteration=0):
         except Exception as e:
             num_tries += 1
             logging.error('not able to upload data: %s', str(e) )
-        if num_tries = max_retries and iteration<2:
+        if num_tries == max_retries and iteration<2:
             logging.info('Restarting this try %i',iteration)
             iteration = iteration +1
             bq_load(table,data,max_retries,name,iteration)
