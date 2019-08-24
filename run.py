@@ -155,7 +155,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
 
     cur_batch = []
     count = 0
-    threadsList=[]
+    threadList=[]
     maxth = 5
     currth = 0
     for row in cursor:
