@@ -66,7 +66,7 @@ def BuildSchema(host, database, user, password, table):
     return tuple(schema)
 
 
-def bq_load(table, data, max_retries=5, name=''):
+def bq_load(table, data, max_retries=5, name='', iteration=0):
     logging.info("Sending request")
     uploaded_successfully = False
     num_tries = 0
@@ -87,6 +87,12 @@ def bq_load(table, data, max_retries=5, name=''):
         except Exception as e:
             num_tries += 1
             logging.error('not able to upload data: %s', str(e) )
+        if num_tries = max_retries and iteration<2:
+            logging.info('Restarting this try %i',iteration)
+            iteration = iteration +1
+            bq_load(table,data,max_retries,name,iteration)
+        if iteration=2
+            logging.error('Error %s',name)
 
 
 @click.command()
