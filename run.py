@@ -98,7 +98,8 @@ def bq_load(table, data, max_retries=5):
 @click.option('-s', '--batch_size',  default=1000, help='max num of rows to load')
 @click.option('-k', '--key',  default='google_key.json', help='Location of google service account key (relative to current working dir)')
 @click.option('-v', '--verbose',  default=0, count=True, help='verbose')
-def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limit, batch_size, key, verbose):
+@click.option('-dt','--delete_table', default=0, count=True, help='Delete existing table on BQ')
+def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limit, batch_size, key, verbose, delete_table):
     # set to max verbose level
     verbose = verbose if verbose < 3 else 3
     loglevel = logging.ERROR - (10 * verbose)
@@ -127,11 +128,13 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
 
     try:
         bq_table = bq_dataset.table(table)
-        try:
-          bq_table.delete()
-          logging.info('Table %s deleted',table)
-        except Exception as e:
-          logging.info('Table %s didnt exist',table)
+        if delete_table>0:
+          logging.info('Trying to delete table %s',table)
+          try:
+            bq_table.delete()
+            logging.info('Table %s deleted',table)
+          except Exception as e:
+            logging.info('Table %s didnt exist',table)
         bq_table.schema = BuildSchema(host, database, user, password, table)
         bq_table.create()
 
