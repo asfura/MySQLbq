@@ -170,7 +170,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
 
         if count % batch_size == 0 and count != 0:
             logging.info('Pooling %i',count)
-            th = pool.Apply(bq_load, args=(bq_table,cur_batch ))
+            th = pool.apply(bq_load, args=(bq_table,cur_batch ))
             
             #bq_load(bq_table, cur_batch)
 
@@ -180,7 +180,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
     # send last elements
     bq_load(bq_table, cur_batch)
     logging.info("Finished (%i total)", count)
-
+    pool.close()
 
 
 if __name__ == '__main__':
