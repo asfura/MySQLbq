@@ -66,7 +66,7 @@ def BuildSchema(host, database, user, password, table):
     return tuple(schema)
 
 
-def bq_load(table, data, max_retries=5):
+def bq_load(table, data, max_retries=5, name=''):
     logging.info("Sending request")
     uploaded_successfully = False
     num_tries = 0
@@ -80,7 +80,7 @@ def bq_load(table, data, max_retries=5):
                     logging.error('not able to upload data: %s', row['errors'])
 
             uploaded_successfully = True
-            logging.info("Values uploaded")
+            logging.info(name+" Uploaded")
         except ServiceUnavailable as e:
             num_tries += 1
             logging.error('insert failed with exception trying again retry %d', num_tries )
@@ -169,13 +169,13 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
         cur_batch.append(row)
 
         if count % batch_size == 0 and count != 0:
-            logging.info('Pooling %i',count)
-            th = pool.apply(bq_load, args=(bq_table,cur_batch ))
-            
+            logging.info('%i Pooling',count)
+            th = pool.apply(bq_load, args=(bq_table,cur_batch,str(count) ))
+            logging.info("%i Threaded", count)
             #bq_load(bq_table, cur_batch)
 
             cur_batch = []
-            logging.info("Threaded %i rows", count)
+            
 
     # send last elements
     bq_load(bq_table, cur_batch)
