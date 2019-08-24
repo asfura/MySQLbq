@@ -170,7 +170,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
 
         if count % batch_size == 0 and count != 0:
             logging.info('%i Pooling',count)
-            th = pool.apply(bq_load, args=(bq_table,cur_batch,str(count) ))
+            th = pool.apply(bq_load, args=(bq_table,cur_batch,name=str(count) ))
             logging.info("%i Threaded", count)
             #bq_load(bq_table, cur_batch)
 
