@@ -79,6 +79,7 @@ def bq_load(table, data, max_retries=5):
                     logging.error('not able to upload data: %s', row['errors'])
 
             uploaded_successfully = True
+            logging.info("Values uploaded")
         except ServiceUnavailable as e:
             num_tries += 1
             logging.error('insert failed with exception trying again retry %d', num_tries )
@@ -156,7 +157,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
     cur_batch = []
     count = 0
     threadList=[]
-    maxth = 5
+    maxth = 2
     currth = 0
     for row in cursor:
         count += 1
