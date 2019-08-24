@@ -29,7 +29,7 @@ def conv_date_to_timestamp(str_date):
 
     date_time = MySQLdb.times.DateTime_or_None(str_date)
     if date_time is None:
-      return (datetime.datetime(1970,1,1)).total_seconds()
+      return 0
     unix_timestamp = (date_time - datetime.datetime(1970,1,1)).total_seconds()
 
     return unix_timestamp
