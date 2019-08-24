@@ -128,6 +128,7 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
     try:
         bq_table = bq_dataset.table(table)
         try:
+          table_ref = client.dataset(dataset).table(table)
           bigquery_client.delete_table(table_ref)
           logging.info('Table %s deleted',table)
         except Exception as e:
