@@ -171,11 +171,13 @@ def SQLToBQBatch(host, database, user, password, table, projectid, dataset, limi
         if count % batch_size == 0 and count != 0:
             th = threading.Thread(target=bq_load, args=(bq_table,cur_batch ))
             threadList.append(th)
+            logging.info("Starting %i rows", count)
             th.start()
             currth = currth +1
             if currth>=maxth:
               for thDone in threadList:
                 thDone.join()
+                logging.info("Done %i rows", count)
             
             #bq_load(bq_table, cur_batch)
 
